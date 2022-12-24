@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {useCallback} from 'react';
+import {loginHref} from './auth';
 import {createItem} from './Item';
 import {Omnibox} from './Omnibox';
 import {useShoppingList} from './ShoppingList';
@@ -14,6 +15,7 @@ export const App = () => {
 
   return (
     <div className="flex col">
+      <a href={loginHref()}>Login with Kroger</a>
       <Omnibox onSubmit={handleOmniSubmit} />
       <ShoppingListView shoppingList={shoppingList} />
     </div>
