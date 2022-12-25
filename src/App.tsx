@@ -1,12 +1,19 @@
 import * as React from 'react';
-import {useCallback} from 'react';
+import {useCallback, useState} from 'react';
 import {createItem} from './Item';
+import {LocationProvider} from './LocationContext';
+import {LocationSelect} from './LocationSelect';
 import {Omnibox} from './Omnibox';
 import {useShoppingList} from './ShoppingList';
 import {ShoppingListView} from './ShoppingListView';
 
 export const App = () => {
+  const [location, setLocation] = useState<string | null>(null);
   const shoppingList = useShoppingList();
+
+  const handleLocationSelected = useCallback((newLocation: string) => {
+    setLocation(newLocation);
+  }, []);
 
   const handleOmniSubmit = useCallback((query: string) => {
     shoppingList.add(createItem({name: query}));
@@ -14,8 +21,11 @@ export const App = () => {
 
   return (
     <div className="flex col">
-      <Omnibox onSubmit={handleOmniSubmit} />
-      <ShoppingListView shoppingList={shoppingList} />
+      <LocationSelect onLocationSelected={handleLocationSelected} />
+      <LocationProvider location={location}>
+        <Omnibox onSubmit={handleOmniSubmit} />
+        <ShoppingListView shoppingList={shoppingList} />
+      </LocationProvider>
     </div>
   );
 };

@@ -13,6 +13,7 @@ export const useFetchData = (input: {
   method: string;
   params?: {[k: string]: string};
   headers?: {[k: string]: string};
+  skip?: boolean;
 }): FetchResult => {
   const accessToken = useAccessToken();
   const [state, setState] = useState<FetchState>('initial');
@@ -28,6 +29,9 @@ export const useFetchData = (input: {
   );
 
   if (state === 'initial') {
+    if (input.skip) {
+      return {state};
+    }
     const url = new URL(input.url);
     url.search = new URLSearchParams(input.params).toString();
     promise.current = fetch(url, {
