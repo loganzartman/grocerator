@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext, useState} from 'react';
+import {useState} from 'react';
 import type {Item} from './Item';
 
 type ShoppingListData = {[k: string]: Item};

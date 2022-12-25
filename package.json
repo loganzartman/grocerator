@@ -6,7 +6,7 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pnpm parcel",
+    "start": "pnpm parcel --https",
     "build": "pnpm parcel build"
   },
   "keywords": [],
