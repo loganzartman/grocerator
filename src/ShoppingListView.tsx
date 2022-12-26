@@ -38,7 +38,7 @@ export const ShoppingListView = ({
 }) => {
   const items = shoppingList
     .getItems()
-    .map((item) => <ShoppingListViewItem item={item} />);
+    .map((item) => <ShoppingListViewItem item={item} key={item.uid} />);
   return (
     <table>
       <thead>

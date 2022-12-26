@@ -9,7 +9,7 @@ export const LocationSelect = (props: {
   onLocationSelected?: (id: string) => void;
 }) => {
   const [zipCode, setZipCode] = useState<string>('');
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string>('');
 
   const handleZipChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +43,9 @@ export const LocationSelect = (props: {
       return null;
     }
     return locationsResult.data.data.map((loc: any) => (
-      <option value={loc.locationId}>{loc.name}</option>
+      <option value={loc.locationId} key={loc.locationId}>
+        {loc.name}
+      </option>
     ));
   }, [locationsResult]);
 
@@ -55,7 +57,7 @@ export const LocationSelect = (props: {
         value={selected}
         onChange={handleSelectedChange}
       >
-        <option>Choose store location</option>
+        <option value={''}>Choose store location</option>
         {locationOptions}
       </select>
     </div>
