@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useEffect, useState} from 'react';
 import {encodeUrlSafeBase64, randomUUID} from './util';
 
 const clientIdProd =
@@ -6,6 +6,10 @@ const clientIdProd =
 
 const authorizeUrlProd = 'https://api.kroger.com/v1/connect/oauth2/authorize';
 const tokenUrlProd = 'https://api.kroger.com/v1/connect/oauth2/token';
+
+const REFRESH_TIME_ALLOWANCE_MS = 1000 * 60;
+export const accessTokenEvents = new EventTarget();
+export const accessTokenChanged = new CustomEvent('changed');
 
 const redirectUri = () => {
   const url = new URL(location.href);
@@ -49,12 +53,44 @@ const getCodeChallenge = (): string => {
   return codeChallenge;
 };
 
-const getCodeVerifier = () => {
+const getCodeVerifier = (): string => {
   const codeVerifier = localStorage.getItem('oauth_code_verifier');
   if (!codeVerifier) {
     throw new Error('No code verifier has been generated');
   }
   return codeVerifier;
+};
+
+const getAccessToken = (): string => {
+  const accessToken = localStorage.getItem('oauth_access_token');
+  if (!accessToken) {
+    throw new Error('No access token has been acquired');
+  }
+  return accessToken;
+};
+
+const getRefreshToken = (): string => {
+  const refreshToken = localStorage.getItem('oauth_refresh_token');
+  if (!refreshToken) {
+    throw new Error('No refresh token has been acquired');
+  }
+  return refreshToken;
+};
+
+const getExpirationDate = (): number => {
+  const expirationDate = localStorage.getItem('oauth_expiration_date');
+  if (!expirationDate) {
+    throw new Error('No expiration date has been acquired');
+  }
+  return Number.parseInt(expirationDate);
+};
+
+const isAccessTokenFresh = () => {
+  return getExpirationDate() > Date.now() + REFRESH_TIME_ALLOWANCE_MS;
+};
+
+const hasFreshAccessToken = (): boolean => {
+  return !!localStorage.getItem('oauth_access_token') && isAccessTokenFresh();
 };
 
 const generateLoginHref = () => {
@@ -68,6 +104,26 @@ const generateLoginHref = () => {
     `redirect_uri=${redirectUri()}`,
     `state=${getNonce()}`,
   ].join('&')}`;
+};
+
+const handleTokenResponse = async (response: Response) => {
+  const responseJson = await response.json();
+
+  const {
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    expires_in: expiresInSec,
+  } = responseJson;
+
+  localStorage.setItem('oauth_access_token', accessToken);
+  localStorage.setItem('oauth_refresh_token', refreshToken);
+  localStorage.setItem(
+    'oauth_expiration_date',
+    String(Date.now() + expiresInSec * 1000)
+  );
+  accessTokenEvents.dispatchEvent(accessTokenChanged);
+
+  setRefreshTimeout();
 };
 
 const exchangeCodeForAccessToken = async (code: string) => {
@@ -87,14 +143,37 @@ const exchangeCodeForAccessToken = async (code: string) => {
       scope: 'product.compact',
     }),
   });
-  if (!response.ok) {
+
+  if (response.ok) {
+    await handleTokenResponse(response);
+  } else {
     throw new Error(await response.text());
   }
-  const accessToken = (await response.json()).access_token;
-  localStorage.setItem('oauth_access_token', accessToken);
 };
 
-export const handleOauthCallback = async () => {
+const refreshAccessToken = async () => {
+  // TODO: kroger says "invalid auth"? not sure it's on my end.
+  const basicAuth = btoa(`${clientIdProd}:`);
+  const response = await fetch(tokenUrlProd, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${basicAuth}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: getRefreshToken(),
+    }),
+  });
+
+  if (response.ok) {
+    await handleTokenResponse(response);
+  } else {
+    console.warn(`Failed to refresh access token: ${await response.text()}`);
+  }
+};
+
+const handleOAuthCallback = async () => {
   const url = new URL(location.href);
 
   // check whether an OAuth server has redirected back to us
@@ -126,20 +205,38 @@ export const handleOauthCallback = async () => {
   }
 };
 
-export const useAccessToken = () => {
-  return useMemo(() => {
-    const authCode = localStorage.getItem('oauth_access_token');
-    if (authCode) {
-      localStorage.removeItem('auto_login_debounce');
-      return authCode;
-    }
+const setRefreshTimeout = () => {
+  if (hasFreshAccessToken()) {
+    const timeLeft = getExpirationDate() - Date.now();
+    setTimeout(() => {
+      refreshAccessToken();
+    }, Math.max(0, timeLeft - REFRESH_TIME_ALLOWANCE_MS));
+  } else console.log('stale AT');
+};
 
-    if (localStorage.getItem('auto_login_debounce')) {
-      localStorage.removeItem('auto_login_debounce');
-      throw new Error('Auto-login is looping');
+export const initOAuth = async () => {
+  await handleOAuthCallback();
+  setRefreshTimeout();
+};
+
+export const useAccessToken = () => {
+  const [accessToken, setAccessToken] = useState<string | null>(() => {
+    if (!hasFreshAccessToken()) {
+      location.href = generateLoginHref();
+      return null;
     }
-    localStorage.setItem('auto_login_debounce', '1');
-    location.href = generateLoginHref();
-    return null;
+    return getAccessToken();
+  });
+
+  useEffect(() => {
+    const handleChanged = () => {
+      setAccessToken(getAccessToken());
+    };
+    accessTokenEvents.addEventListener('changed', handleChanged);
+    return () => {
+      accessTokenEvents.removeEventListener('changed', handleChanged);
+    };
   }, []);
+
+  return accessToken;
 };
