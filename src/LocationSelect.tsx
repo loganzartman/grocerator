@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useCallback, useMemo, useState} from 'react';
 import type {ChangeEvent} from 'react';
-import {useFetchData} from './fetch';
+import {useFetch} from './fetch';
 
 const GROCERY_DEPT = '23';
 
@@ -27,7 +27,7 @@ export const LocationSelect = (props: {
     []
   );
 
-  const locationsResult = useFetchData({
+  const locationsResult = useFetch({
     url: 'https://api.kroger.com/v1/locations',
     method: 'GET',
     params: {
