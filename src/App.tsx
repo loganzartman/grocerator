@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {useCallback, useState} from 'react';
+import {ClearListButton} from './ClearListButton';
 import {createItem} from './Item';
 import {LocationProvider} from './LocationContext';
 import {LocationSelect} from './LocationSelect';
@@ -23,7 +24,10 @@ export const App = () => {
     <div className="flex col">
       <LocationSelect onLocationSelected={handleLocationSelected} />
       <LocationProvider location={location}>
-        <Omnibox onSubmit={handleOmniSubmit} />
+        <div className="flex row">
+          <Omnibox onSubmit={handleOmniSubmit} />
+          <ClearListButton shoppingList={shoppingList} />
+        </div>
         <ShoppingListView shoppingList={shoppingList} />
       </LocationProvider>
     </div>
