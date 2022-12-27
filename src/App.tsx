@@ -16,9 +16,12 @@ export const App = () => {
     setLocation(newLocation);
   }, []);
 
-  const handleOmniSubmit = useCallback((query: string) => {
-    shoppingList.add(createItem({name: query}));
-  }, []);
+  const handleOmniSubmit = useCallback(
+    (query: string) => {
+      shoppingList.add(createItem({name: query}));
+    },
+    [shoppingList]
+  );
 
   return (
     <div className="flex col">

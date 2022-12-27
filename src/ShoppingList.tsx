@@ -1,5 +1,4 @@
-import * as React from 'react';
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import type {Item} from './Item';
 
 type ShoppingListData = {[k: string]: Item};
@@ -41,7 +40,7 @@ export const useShoppingList = (): ShoppingList => {
     return removedItem;
   };
   const clear = () => {
-    setData({});
+    setData(() => ({}));
   };
 
   return {
@@ -59,11 +58,12 @@ export const useLocallyPersistedShoppingList = (
   listName: string
 ): ShoppingList => {
   const shoppingList = useShoppingList();
+  const {setData} = shoppingList;
   const storageKey = useMemo(() => `shoppingList.${listName}`, [listName]);
 
   useEffect(() => {
-    shoppingList.setData(JSON.parse(localStorage.getItem(storageKey) ?? '{}'));
-  }, [storageKey]);
+    setData(JSON.parse(localStorage.getItem(storageKey) ?? '{}'));
+  }, [storageKey, setData]);
 
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(shoppingList.data));
@@ -82,7 +82,7 @@ export const useLocallyPersistedShoppingList = (
     return () => {
       window.removeEventListener('storage', onStorage);
     };
-  }, []);
+  }, [shoppingList, storageKey]);
 
   return shoppingList;
 };
