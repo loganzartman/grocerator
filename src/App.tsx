@@ -4,12 +4,12 @@ import {createItem} from './Item';
 import {LocationProvider} from './LocationContext';
 import {LocationSelect} from './LocationSelect';
 import {Omnibox} from './Omnibox';
-import {useShoppingList} from './ShoppingList';
+import {useLocallyPersistedShoppingList} from './ShoppingList';
 import {ShoppingListView} from './ShoppingListView';
 
 export const App = () => {
   const [location, setLocation] = useState<string | null>(null);
-  const shoppingList = useShoppingList();
+  const shoppingList = useLocallyPersistedShoppingList('main');
 
   const handleLocationSelected = useCallback((newLocation: string) => {
     setLocation(newLocation);
