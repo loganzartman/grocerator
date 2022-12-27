@@ -1,12 +1,16 @@
 import {useCallback, useMemo, useRef, useState} from 'react';
 import {useAccessToken} from './auth';
 import {ExpiringCache} from './cache';
+import {delayMs} from './util';
 
 export type FetchState = 'loading' | 'ready' | 'error';
 export type FetchResult =
   | {state: 'loading'}
   | {state: 'ready'; data: any}
   | {state: 'error'; error: any};
+
+const maxFetchesPerSecond = 1;
+let lastFetchDate = 0;
 
 const fetchCache = new ExpiringCache<Readonly<[URL, RequestInit]>, Object>({
   expiresInMs: 120 * 1000,
@@ -68,6 +72,13 @@ export const useFetch = (input: {
       setState('ready');
     } else {
       try {
+        // rate limiting
+        const fetchDelayMs = 1000 / maxFetchesPerSecond;
+        const timeSinceFetchMs = Date.now() - lastFetchDate;
+        const waitTimeMs = Math.max(0, fetchDelayMs - timeSinceFetchMs);
+        lastFetchDate = Date.now() + waitTimeMs;
+        if (waitTimeMs > 0) await delayMs(waitTimeMs);
+
         const response = await fetch(url, {...fetchInit, signal});
         if (response.ok) {
           dataRef.current = await response.json();

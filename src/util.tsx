@@ -48,3 +48,15 @@ export const randomUUID = () => {
   }
   return encodeUrlSafeBase64(bytes);
 };
+
+export const delayMs = async (ms: number): Promise<void> => {
+  if (!Number.isFinite(ms)) {
+    throw new Error('Invalid delay: ' + ms);
+  }
+  let resolve: () => void;
+  const deferred = new Promise<void>((res) => {
+    resolve = res;
+  });
+  setTimeout(() => resolve(), ms);
+  return deferred;
+};
