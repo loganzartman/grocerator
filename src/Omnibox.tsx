@@ -31,6 +31,7 @@ export const Omnibox = ({
   return (
     <input
       ref={inputRef}
+      className="flex-1"
       autoFocus
       type="text"
       placeholder="type to search"

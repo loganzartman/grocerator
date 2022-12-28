@@ -50,7 +50,7 @@ export const LocationSelect = (props: {
   }, [locationsResult]);
 
   return (
-    <div className="flex row">
+    <div className="flex flex-row">
       <input type="text" placeholder="ZIP code" onChange={handleZipChange} />
       <select
         disabled={locationsResult.state !== 'ready'}
