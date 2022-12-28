@@ -25,7 +25,7 @@ export const Omnibox = ({
         event.currentTarget.value = '';
       }
     },
-    []
+    [onSubmit]
   );
 
   return (
