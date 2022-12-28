@@ -31,11 +31,11 @@ export const ClearListButton = ({
           className="relative z-10"
           onClose={() => setModalOpen(false)}
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-white bg-opacity-25 backdrop-blur-md" />
 
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-md bg-white py-4 px-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden border-2 border-neutral-200 border-solid rounded-md bg-white py-4 px-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
