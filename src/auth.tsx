@@ -95,11 +95,11 @@ const hasFreshAccessToken = (): boolean => {
 
 const generateLoginHref = () => {
   return `${authorizeUrlProd}?${[
-    `response_type=code`,
-    `response_mode=form_post`,
+    'response_type=code',
+    'response_mode=form_post',
     `code_challenge=${getCodeChallenge()}`,
-    `code_challenge_method=S256`,
-    `scope=product.compact`,
+    'code_challenge_method=S256',
+    'scope=product.compact',
     `client_id=${clientIdProd}`,
     `redirect_uri=${redirectUri()}`,
     `state=${getNonce()}`,

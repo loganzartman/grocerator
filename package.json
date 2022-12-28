@@ -6,9 +6,10 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "packageManager": "pnpm@7.20.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "pnpm eslint",
     "start": "pnpm parcel --https",
-    "build": "pnpm parcel build"
+    "build": "pnpm parcel build",
+    "eslint": "eslint src"
   },
   "keywords": [],
   "author": "",

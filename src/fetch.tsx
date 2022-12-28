@@ -12,11 +12,11 @@ export type FetchResult =
 const maxFetchesPerSecond = 1;
 let lastFetchDate = 0;
 
-const fetchCache = new ExpiringCache<Readonly<[URL, RequestInit]>, Object>({
+const fetchCache = new ExpiringCache<Readonly<[URL, RequestInit]>, object>({
   expiresInMs: 120 * 1000,
 });
 
-const deepEqual = (a: Object, b: Object) =>
+const deepEqual = (a: object, b: object) =>
   JSON.stringify(a) === JSON.stringify(b);
 
 export const useFetch = (input: {
@@ -100,7 +100,7 @@ export const useFetch = (input: {
         setState('error');
       }
     }
-  }, [url, fetchInit]);
+  }, [url, fetchInit, input.noCache]);
 
   if (inputChanged) {
     sendRequest();

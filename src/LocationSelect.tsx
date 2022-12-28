@@ -5,7 +5,9 @@ import {useFetch} from './fetch';
 
 const GROCERY_DEPT = '23';
 
-export const LocationSelect = (props: {
+export const LocationSelect = ({
+  onLocationSelected,
+}: {
   onLocationSelected?: (id: string) => void;
 }) => {
   const [zipCode, setZipCode] = useState<string>('');
@@ -22,9 +24,9 @@ export const LocationSelect = (props: {
     (event: ChangeEvent<HTMLSelectElement>) => {
       const locationId = event.currentTarget.value;
       setSelected(locationId);
-      props.onLocationSelected?.(locationId);
+      onLocationSelected?.(locationId);
     },
-    []
+    [onLocationSelected]
   );
 
   const locationsResult = useFetch({
