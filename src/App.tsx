@@ -24,13 +24,13 @@ export const App = () => {
   );
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mt-6">
       <LocationSelect onLocationSelected={handleLocationSelected} />
       <LocationProvider location={location}>
-        <div className="flex flex-row">
+        <div className="flex flex-row mt-4 justify-center">
           <Omnibox onSubmit={handleOmniSubmit} />
-          <ClearListButton shoppingList={shoppingList} />
         </div>
+        <ClearListButton shoppingList={shoppingList} />
         <ShoppingListView shoppingList={shoppingList} />
       </LocationProvider>
     </div>
