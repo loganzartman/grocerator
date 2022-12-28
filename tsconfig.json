@@ -1,8 +1,11 @@
 {
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
     "target": "ES6",
     "jsx": "react",
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "moduleResolution": "Node"
   }
 }
