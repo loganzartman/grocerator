@@ -1,12 +1,13 @@
 import * as React from 'react';
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {Combobox} from '@headlessui/react';
 import {ShoppingList} from './ShoppingList';
 import {Item} from './Item';
 import ChevronUpDownIcon from '@heroicons/react/20/solid/ChevronUpDownIcon';
 
-type ActionEnum = 'create' | 'delete';
-type Action = {action: ActionEnum; name: string};
+type CreateAction = {uid: string; action: 'create'; name: string};
+type DeleteAction = {uid: string; action: 'delete'; name: string; item: Item};
+type Action = CreateAction | DeleteAction;
 export type OmniboxSelection = Item | Action;
 
 const isAction = (selection: OmniboxSelection): selection is Action =>
@@ -18,13 +19,13 @@ const optionClass = ({active}: {active: boolean}) =>
   }`;
 
 export const Omnibox = ({
-  shoppingList,
+  savedItemList,
+  tripItemList,
   onSubmit,
 }: {
-  shoppingList: ShoppingList;
-  onQueryChange?: (query: string) => void;
+  savedItemList: ShoppingList;
+  tripItemList: ShoppingList;
   onSubmit?: (value: OmniboxSelection) => void;
-  changeDelay?: number;
 }) => {
   const [selected, setSelected] = useState<OmniboxSelection>(null);
   const [value, setValue] = useState<string>('');
@@ -42,14 +43,56 @@ export const Omnibox = ({
     [onSubmit, reset]
   );
 
-  const options = shoppingList
-    .getItems()
-    .filter((item) => item.name.includes(value))
-    .map((item) => (
-      <Combobox.Option key={item.uid} value={item} className={optionClass}>
-        {item.name}
-      </Combobox.Option>
-    ));
+  const optionsData: OmniboxSelection[] = useMemo(() => {
+    const savedItems = savedItemList.getItems();
+    const tripItems = tripItemList.getItems();
+
+    const matchingTripItem = tripItems.find((item) => item.name === value);
+    const matchingSavedItem = savedItems.find((item) => item.name === value);
+    const noMatchingItem = value && !matchingTripItem && !matchingSavedItem;
+
+    return [
+      ...[
+        ...savedItems.filter((item) => !tripItemList.has(item)),
+        ...tripItems.map((item) => ({
+          uid: `delete ${item.name}`,
+          action: 'delete' as const,
+          name: item.name,
+          item,
+        })),
+      ].filter((item) => item.name.includes(value)),
+      noMatchingItem && {
+        uid: `create ${value}`,
+        action: 'create' as const,
+        name: value,
+      },
+    ].filter(Boolean);
+  }, [savedItemList, tripItemList, value]);
+
+  const options = useMemo(
+    () =>
+      optionsData.map((option) =>
+        'action' in option ? (
+          <Combobox.Option
+            className={optionClass}
+            key={option.uid}
+            value={option}
+          >
+            <span className="font-bold">{option.action}&nbsp;</span>
+            {option.name}
+          </Combobox.Option>
+        ) : (
+          <Combobox.Option
+            key={option.uid}
+            value={option}
+            className={optionClass}
+          >
+            {option.name}
+          </Combobox.Option>
+        )
+      ),
+    [optionsData]
+  );
 
   return (
     <Combobox value={selected} onChange={handleChange}>
@@ -69,15 +112,6 @@ export const Omnibox = ({
         </div>
         <Combobox.Options className="absolute z-10 w-full mt-1 bg-white py-1 text-lg ring-1 rounded-md shadow-lg">
           {options}
-          {value.length > 0 && (
-            <Combobox.Option
-              className={optionClass}
-              value={{action: 'create', name: value}}
-            >
-              <span className="font-bold">Create </span>
-              {value}
-            </Combobox.Option>
-          )}
         </Combobox.Options>
       </div>
     </Combobox>

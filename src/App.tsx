@@ -10,7 +10,7 @@ import {ShoppingListView} from './ShoppingListView';
 
 export const App = () => {
   const [location, setLocation] = useState<string | null>(null);
-  const savedItems = useLocallyPersistedShoppingList('all');
+  const savedItems = useLocallyPersistedShoppingList('saved');
   const tripItems = useLocallyPersistedShoppingList('trip');
 
   const handleLocationSelected = useCallback((newLocation: string) => {
@@ -19,12 +19,14 @@ export const App = () => {
 
   const handleOmniSubmit = useCallback(
     (selection: OmniboxSelection) => {
-      if ('uid' in selection) {
+      if (!('action' in selection)) {
         tripItems.add(selection);
       } else if (selection.action === 'create') {
         const item = createItem({name: selection.name});
         tripItems.add(item);
         savedItems.add(item);
+      } else if (selection.action === 'delete') {
+        tripItems.remove(selection.item);
       } else {
         throw new Error('Unsupported selection');
       }
@@ -38,7 +40,11 @@ export const App = () => {
       <LocationSelect onLocationSelected={handleLocationSelected} />
       <LocationProvider location={location}>
         <div className="flex flex-row mt-4 justify-center">
-          <Omnibox shoppingList={savedItems} onSubmit={handleOmniSubmit} />
+          <Omnibox
+            savedItemList={savedItems}
+            tripItemList={tripItems}
+            onSubmit={handleOmniSubmit}
+          />
         </div>
         <div className="flex flex-row mt-2 gap-x-2 justify-center">
           <ClearListButton shoppingList={tripItems} title="Clear this list" />

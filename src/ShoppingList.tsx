@@ -7,6 +7,7 @@ export type ShoppingList = {
   data: ShoppingListData;
   setData: (data: ShoppingListData) => void;
   getItems: () => Item[];
+  has: (item: Item) => boolean;
   add: (item: Item) => void;
   mutate: (item: Item, changes: Partial<Item>) => Item;
   remove: (item: Item) => Item;
@@ -16,6 +17,7 @@ export type ShoppingList = {
 export const useShoppingList = (): ShoppingList => {
   const [data, setData] = useState<ShoppingListData>(() => ({}));
   const getItems = () => Object.values(data);
+  const has = (item: Item) => item.uid in data;
   const add = (item: Item) => {
     setData((data) => ({...data, [item.uid]: item}));
   };
@@ -47,6 +49,7 @@ export const useShoppingList = (): ShoppingList => {
     data,
     setData,
     getItems,
+    has,
     add,
     mutate,
     remove,
