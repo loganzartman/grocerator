@@ -7,6 +7,7 @@ import {LocationSelect} from './LocationSelect';
 import {Omnibox, OmniboxSelection} from './Omnibox';
 import {useLocallyPersistedShoppingList} from './ShoppingList';
 import {ShoppingListView} from './ShoppingListView';
+import {Title} from './Title';
 
 export const App = () => {
   const [location, setLocation] = useState<string | null>(null);
@@ -35,8 +36,8 @@ export const App = () => {
   );
 
   return (
-    <div className="flex flex-col mt-2">
-      <div className="text-5xl text-center mb-6">grocerator</div>
+    <div className="flex flex-col">
+      <Title />
       <LocationSelect onLocationSelected={handleLocationSelected} />
       <LocationProvider location={location}>
         <div className="flex flex-row mt-4 justify-center">

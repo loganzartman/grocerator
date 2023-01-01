@@ -3,7 +3,7 @@ import {useCallback, useMemo, useState} from 'react';
 import type {ChangeEvent} from 'react';
 import {useFetch} from './fetch';
 import {Listbox} from '@headlessui/react';
-import {ChevronUpDownIcon} from '@heroicons/react/20/solid';
+import {ChevronUpDownIcon} from '@heroicons/react/24/outline';
 
 const GROCERY_DEPT = '23';
 
@@ -44,8 +44,8 @@ export const LocationSelect = ({
     return locationsResult.data.data.map((loc: any) => (
       <Listbox.Option
         className={({active}) =>
-          `relative whitespace-nowrap cursor-default select-none px-2 py-1 rounded-md ${
-            active ? 'bg-yellow-200' : ''
+          `relative whitespace-nowrap text-purple-800 cursor-default select-none px-2 py-1 m-1 rounded-md ${
+            active ? 'bg-purple-100 transition-none' : 'transition-colors'
           }`
         }
         value={loc}
@@ -67,7 +67,7 @@ export const LocationSelect = ({
   return (
     <div className="flex flex-row justify-center gap-x-2">
       <input
-        className="justify-self-end text-right w-[5em] shadow-inner px-2 py-1 rounded-md border-solid border-2 border-neutral-300"
+        className="justify-self-end text-right w-[5em] rounded-md bg-purple-100 text-purple-700 focus:border-2 border-purple-700 transition outline-none"
         type="text"
         placeholder="ZIP code"
         onChange={handleZipChange}
@@ -78,18 +78,25 @@ export const LocationSelect = ({
           disabled={locationsResult.state !== 'ready'}
           onChange={handleSelectedChange}
         >
-          <Listbox.Button className="disabled:opacity-50 relative justify-self-start shadow-inner px-2 py-1 pr-7 rounded-md border-solid border-2 border-neutral-300">
-            <span className="block truncate">{selected.name}</span>
-            <span className="pointer-events-none absolute pr-1 inset-y-0 right-0 flex items-center">
-              <ChevronUpDownIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-            </span>
-          </Listbox.Button>
-          <Listbox.Options className="absolute z-10 mt-1 bg-white py-1 text-base ring-1 rounded-md shadow-lg">
-            {locationOptions}
-          </Listbox.Options>
+          {({open}) => (
+            <>
+              <Listbox.Button
+                className={`w-72 ${
+                  open
+                    ? 'rounded-t-md bg-white text-purple-800 border-t-2 border-x-2'
+                    : 'rounded-md bg-purple-100 text-purple-700 focus:border-2'
+                } disabled:opacity-50 relative justify-self-start border-purple-700 transition py-2 pl-3 pr-10 text-base leading-5 outline-none`}
+              >
+                <span className="block truncate">{selected.name}</span>
+                <span className="pointer-events-none absolute pr-1 inset-y-0 right-0 flex items-center">
+                  <ChevronUpDownIcon className="w-5 h-5" aria-hidden="true" />
+                </span>
+              </Listbox.Button>
+              <Listbox.Options className="absolute transition z-10 w-full text-ellipsis max-h-60 overflow-auto bg-white text-base rounded-b-lg shadow-lg border-b-2 border-x-2 border-purple-700">
+                {locationOptions}
+              </Listbox.Options>
+            </>
+          )}
         </Listbox>
       </div>
     </div>

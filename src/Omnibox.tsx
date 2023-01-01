@@ -3,7 +3,12 @@ import {useCallback, useMemo, useState} from 'react';
 import {Combobox} from '@headlessui/react';
 import {ShoppingList} from './ShoppingList';
 import {Item} from './Item';
-import ChevronUpDownIcon from '@heroicons/react/20/solid/ChevronUpDownIcon';
+import {
+  PlusCircleIcon,
+  TrashIcon,
+  ChevronUpDownIcon,
+  MinusCircleIcon,
+} from '@heroicons/react/24/outline';
 
 type CreateAction = {uid: string; action: 'create'; name: string};
 type DeleteAction = {uid: string; action: 'delete'; name: string; item: Item};
@@ -13,10 +18,21 @@ export type OmniboxSelection = Item | Action;
 const isAction = (selection: OmniboxSelection): selection is Action =>
   'action' in selection;
 
+const actionIcons = {
+  create: <PlusCircleIcon className="w-5 h-5" aria-hidden={true} />,
+  delete: <MinusCircleIcon className="w-5 h-5" aria-hidden={true} />,
+};
+
 const optionClass = ({active}: {active: boolean}) =>
-  `relative whitespace-nowrap cursor-default select-none px-2 py-1 rounded-md ${
-    active ? 'bg-yellow-200' : ''
+  `relative whitespace-nowrap cursor-default select-none px-2 py-1 pl-8 m-1 rounded-md ${
+    active ? 'bg-yellow-100 transition-none' : 'transition-colors'
   }`;
+
+const OptionIconContainer = ({children}: {children: React.ReactNode}) => (
+  <span className={'absolute inset-y-0 left-0 flex items-center pl-2'}>
+    {children}
+  </span>
+);
 
 export const Omnibox = ({
   savedItemList,
@@ -78,8 +94,15 @@ export const Omnibox = ({
             key={option.uid}
             value={option}
           >
-            <span className="font-bold">{option.action}&nbsp;</span>
+            <span className="text-yellow-700 font-bold">
+              {option.action}&nbsp;
+            </span>
             {option.name}
+            <OptionIconContainer>
+              <span className="text-yellow-700">
+                {actionIcons[option.action]}
+              </span>
+            </OptionIconContainer>
           </Combobox.Option>
         ) : (
           <Combobox.Option
@@ -95,25 +118,33 @@ export const Omnibox = ({
   );
 
   return (
-    <Combobox value={selected} onChange={handleChange}>
-      <div className="relative">
-        <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-inner focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-          <Combobox.Input
-            className="w-full rounded-lg border-2 border-solid border-neutral-300 py-2 pl-3 pr-10 text-2xl leading-5 text-gray-900 focus:ring-0"
-            onChange={(event) => setValue(event.currentTarget.value)}
-            displayValue={(item: any) => item?.name}
-          />
-          <Combobox.Button className="absolute right-0 inset-y-0 flex items-center pr-2">
-            <ChevronUpDownIcon
-              className="h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-          </Combobox.Button>
-        </div>
-        <Combobox.Options className="absolute z-10 w-full mt-1 bg-white py-1 text-lg ring-1 rounded-md shadow-lg">
-          {options}
-        </Combobox.Options>
-      </div>
-    </Combobox>
+    <div className="w-[36rem]">
+      <Combobox value={selected} onChange={handleChange}>
+        {({open}) => (
+          <div className="relative">
+            <div className="">
+              <Combobox.Input
+                className={`w-full ${
+                  open
+                    ? 'rounded-t-lg bg-white border-t-2 border-x-2'
+                    : 'rounded-lg bg-yellow-100 text-gray-900 focus:border-2'
+                } border-yellow-700 text-yellow-700 transition py-2 pl-3 pr-10 text-2xl leading-5 outline-none`}
+                onChange={(event) => setValue(event.currentTarget.value)}
+                displayValue={(item: any) => item?.name}
+              />
+              <Combobox.Button className="absolute right-0 inset-y-0 flex items-center pr-2">
+                <ChevronUpDownIcon
+                  className="h-5 w-5 text-yellow-700"
+                  aria-hidden="true"
+                />
+              </Combobox.Button>
+            </div>
+            <Combobox.Options className="absolute z-10 w-full max-h-60 overflow-auto bg-white text-lg rounded-b-lg shadow-lg border-b-2 border-x-2 border-yellow-700">
+              {options}
+            </Combobox.Options>
+          </div>
+        )}
+      </Combobox>
+    </div>
   );
 };
