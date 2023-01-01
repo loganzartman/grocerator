@@ -40,21 +40,21 @@ export const App = () => {
       <Title />
       <LocationSelect onLocationSelected={handleLocationSelected} />
       <LocationProvider location={location}>
-        <div className="flex flex-row mt-4 justify-center">
+        <div className="mt-4 flex flex-row justify-center">
           <Omnibox
             savedItemList={savedItems}
             tripItemList={tripItems}
             onSubmit={handleOmniSubmit}
           />
         </div>
-        <div className="flex flex-row mt-2 gap-x-2 justify-center">
+        <div className="mt-2 flex flex-row justify-center gap-x-2">
           <ClearListButton shoppingList={tripItems} title="Clear this list" />
           <ClearListButton
             shoppingList={savedItems}
             title="Clear saved items"
           />
         </div>
-        <div className="flex flex-row m-4 mt-6">
+        <div className="m-4 mt-6 flex flex-row">
           <ShoppingListView shoppingList={tripItems} />
         </div>
       </LocationProvider>

@@ -12,7 +12,7 @@ export const Title = () => {
 
   return (
     <div
-      className="text-5xl text-center font-title text-[hsl(0,0%,10%)] mt-6 mb-6"
+      className="mt-6 mb-6 text-center font-title text-5xl text-[hsl(0,0%,10%)]"
       style={{textShadow}}
     >
       grocerator

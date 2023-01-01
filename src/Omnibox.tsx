@@ -19,8 +19,8 @@ const isAction = (selection: OmniboxSelection): selection is Action =>
   'action' in selection;
 
 const actionIcons = {
-  create: <PlusCircleIcon className="w-5 h-5" aria-hidden={true} />,
-  delete: <MinusCircleIcon className="w-5 h-5" aria-hidden={true} />,
+  create: <PlusCircleIcon className="h-5 w-5" aria-hidden={true} />,
+  delete: <MinusCircleIcon className="h-5 w-5" aria-hidden={true} />,
 };
 
 const optionClass = ({active}: {active: boolean}) =>
@@ -94,7 +94,7 @@ export const Omnibox = ({
             key={option.uid}
             value={option}
           >
-            <span className="text-yellow-700 font-bold">
+            <span className="font-bold text-yellow-700">
               {option.action}&nbsp;
             </span>
             {option.name}
@@ -126,20 +126,20 @@ export const Omnibox = ({
               <Combobox.Input
                 className={`w-full ${
                   open
-                    ? 'rounded-t-lg bg-white border-t-2 border-x-2'
+                    ? 'rounded-t-lg border-x-2 border-t-2 bg-white'
                     : 'rounded-lg bg-yellow-100 text-gray-900 focus:border-2'
-                } border-yellow-700 text-yellow-700 transition py-2 pl-3 pr-10 text-2xl leading-5 outline-none`}
+                } border-yellow-700 py-2 pl-3 pr-10 text-2xl leading-5 text-yellow-700 outline-none transition`}
                 onChange={(event) => setValue(event.currentTarget.value)}
                 displayValue={(item: any) => item?.name}
               />
-              <Combobox.Button className="absolute right-0 inset-y-0 flex items-center pr-2">
+              <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
                   className="h-5 w-5 text-yellow-700"
                   aria-hidden="true"
                 />
               </Combobox.Button>
             </div>
-            <Combobox.Options className="absolute z-10 w-full max-h-60 overflow-auto bg-white text-lg rounded-b-lg shadow-lg border-b-2 border-x-2 border-yellow-700">
+            <Combobox.Options className="absolute z-10 max-h-60 w-full overflow-auto rounded-b-lg border-x-2 border-b-2 border-yellow-700 bg-white text-lg shadow-lg">
               {options}
             </Combobox.Options>
           </div>

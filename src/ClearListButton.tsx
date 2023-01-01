@@ -20,7 +20,7 @@ export const ClearListButton = ({
   return (
     <>
       <button
-        className="px-1 py-0.5 bg-neutral-100 border-2 border-solid border-neutral-300 rounded-md"
+        className="rounded-md border-2 border-solid border-neutral-300 bg-neutral-100 px-1 py-0.5"
         onClick={() => setModalOpen(true)}
       >
         {title}
@@ -35,7 +35,7 @@ export const ClearListButton = ({
 
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden border-2 border-neutral-200 border-solid rounded-md bg-white py-4 px-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-md border-2 border-solid border-neutral-200 bg-white py-4 px-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
@@ -48,7 +48,7 @@ export const ClearListButton = ({
                   </p>
                 </div>
 
-                <div className="flex flex-row justify-end mt-8 gap-x-2">
+                <div className="mt-8 flex flex-row justify-end gap-x-2">
                   <button
                     type="button"
                     className="inline-flex justify-center rounded-md border border-transparent bg-neutral-100 px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-neutral-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2"

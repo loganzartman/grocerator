@@ -44,7 +44,7 @@ export const LocationSelect = ({
     return locationsResult.data.data.map((loc: any) => (
       <Listbox.Option
         className={({active}) =>
-          `relative whitespace-nowrap text-purple-800 cursor-default select-none px-2 py-1 m-1 rounded-md ${
+          `relative m-1 cursor-default select-none whitespace-nowrap rounded-md px-2 py-1 text-purple-800 ${
             active ? 'bg-purple-100 transition-none' : 'transition-colors'
           }`
         }
@@ -67,7 +67,7 @@ export const LocationSelect = ({
   return (
     <div className="flex flex-row justify-center gap-x-2">
       <input
-        className="justify-self-end text-right w-[5em] rounded-md bg-purple-100 text-purple-700 focus:border-2 border-purple-700 transition outline-none"
+        className="w-[5em] justify-self-end rounded-md border-purple-700 bg-purple-100 text-right text-purple-700 outline-none transition focus:border-2"
         type="text"
         placeholder="ZIP code"
         onChange={handleZipChange}
@@ -83,16 +83,16 @@ export const LocationSelect = ({
               <Listbox.Button
                 className={`w-72 ${
                   open
-                    ? 'rounded-t-md bg-white text-purple-800 border-t-2 border-x-2'
+                    ? 'rounded-t-md border-x-2 border-t-2 bg-white text-purple-800'
                     : 'rounded-md bg-purple-100 text-purple-700 focus:border-2'
-                } disabled:opacity-50 relative justify-self-start border-purple-700 transition py-2 pl-3 pr-10 text-base leading-5 outline-none`}
+                } relative justify-self-start border-purple-700 py-2 pl-3 pr-10 text-base leading-5 outline-none transition disabled:opacity-50`}
               >
                 <span className="block truncate">{selected.name}</span>
-                <span className="pointer-events-none absolute pr-1 inset-y-0 right-0 flex items-center">
-                  <ChevronUpDownIcon className="w-5 h-5" aria-hidden="true" />
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1">
+                  <ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
                 </span>
               </Listbox.Button>
-              <Listbox.Options className="absolute transition z-10 w-full text-ellipsis max-h-60 overflow-auto bg-white text-base rounded-b-lg shadow-lg border-b-2 border-x-2 border-purple-700">
+              <Listbox.Options className="absolute z-10 max-h-60 w-full overflow-auto text-ellipsis rounded-b-lg border-x-2 border-b-2 border-purple-700 bg-white text-base shadow-lg transition">
                 {locationOptions}
               </Listbox.Options>
             </>

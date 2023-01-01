@@ -48,7 +48,7 @@ export const ShoppingListView = ({
     .getItems()
     .map((item) => <ShoppingListViewItem item={item} key={item.uid} />);
   return (
-    <table className="w-full border-none border-separate border-spacing-2">
+    <table className="w-full border-separate border-spacing-2 border-none">
       <thead className="bg-neutral-100 text-left">
         <tr>
           <th>Name</th>
