@@ -19,17 +19,21 @@ const isAction = (selection: OmniboxSelection): selection is Action =>
   'action' in selection;
 
 const actionIcons = {
-  create: <PlusCircleIcon className="h-5 w-5" aria-hidden={true} />,
-  remove: <MinusCircleIcon className="h-5 w-5" aria-hidden={true} />,
+  create: 'library_add',
+  remove: 'remove',
 };
 
 const optionClass = ({active}: {active: boolean}) =>
-  `relative whitespace-nowrap cursor-default select-none px-2 py-1 pl-8 m-1 rounded-md ${
+  `relative whitespace-nowrap cursor-default select-none px-2 py-1 pl-10 m-1 rounded-md ${
     active ? 'bg-yellow-100 transition-none' : 'transition-colors'
   }`;
 
 const OptionIconContainer = ({children}: {children: React.ReactNode}) => (
-  <span className={'absolute inset-y-0 left-0 flex items-center pl-2'}>
+  <span
+    className={
+      'material-symbols-outlined absolute inset-y-0 left-0 flex items-center pl-2'
+    }
+  >
     {children}
   </span>
 );
@@ -94,9 +98,7 @@ export const Omnibox = ({
             key={option.uid}
             value={option}
           >
-            <span className="font-bold text-yellow-700">
-              {option.action}&nbsp;
-            </span>
+            <span className="text-yellow-700">{option.action}&nbsp;</span>
             {option.name}
             <OptionIconContainer>
               <span className="text-yellow-700">
@@ -111,6 +113,9 @@ export const Omnibox = ({
             className={optionClass}
           >
             {option.name}
+            <OptionIconContainer>
+              <span className="text-yellow-700">add</span>
+            </OptionIconContainer>
           </Combobox.Option>
         )
       ),
@@ -130,7 +135,7 @@ export const Omnibox = ({
                     : 'rounded-lg bg-yellow-100 text-gray-900 focus:border-2'
                 } border-yellow-700 py-2 pl-3 pr-10 text-2xl leading-5 text-yellow-700 outline-none transition`}
                 onChange={(event) => setValue(event.currentTarget.value)}
-                displayValue={(item: any) => item?.name}
+                // displayValue={(item: any) => item?.name}
               />
               <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon

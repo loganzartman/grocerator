@@ -67,7 +67,7 @@ export const LocationSelect = ({
   return (
     <div className="flex flex-row justify-center gap-x-2">
       <input
-        className="w-[5em] justify-self-end rounded-md border-purple-700 bg-purple-100 text-right text-purple-700 outline-none transition focus:border-2"
+        className="w-[5em] justify-self-end rounded-md border-purple-700 bg-purple-100 pr-2 text-right text-purple-700 outline-none transition focus:border-2"
         type="text"
         placeholder="ZIP code"
         onChange={handleZipChange}
