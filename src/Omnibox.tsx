@@ -3,12 +3,6 @@ import {useCallback, useMemo, useState} from 'react';
 import {Combobox} from '@headlessui/react';
 import {ShoppingList} from './ShoppingList';
 import {Item} from './Item';
-import {
-  PlusCircleIcon,
-  TrashIcon,
-  ChevronUpDownIcon,
-  MinusCircleIcon,
-} from '@heroicons/react/24/outline';
 
 type CreateAction = {uid: string; action: 'create'; name: string};
 type DeleteAction = {uid: string; action: 'remove'; name: string; item: Item};
@@ -138,10 +132,12 @@ export const Omnibox = ({
                 // displayValue={(item: any) => item?.name}
               />
               <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                <ChevronUpDownIcon
-                  className="h-5 w-5 text-yellow-700"
+                <span
+                  className="material-symbols-outlined text-yellow-700"
                   aria-hidden="true"
-                />
+                >
+                  unfold_more
+                </span>
               </Combobox.Button>
             </div>
             <Combobox.Options className="absolute z-10 max-h-60 w-full overflow-auto rounded-b-lg border-x-2 border-b-2 border-yellow-700 bg-white text-lg shadow-lg">

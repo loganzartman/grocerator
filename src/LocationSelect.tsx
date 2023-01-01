@@ -3,7 +3,6 @@ import {useCallback, useMemo, useState} from 'react';
 import type {ChangeEvent} from 'react';
 import {useFetch} from './fetch';
 import {Listbox} from '@headlessui/react';
-import {ChevronUpDownIcon} from '@heroicons/react/24/outline';
 
 const GROCERY_DEPT = '23';
 
@@ -89,7 +88,12 @@ export const LocationSelect = ({
               >
                 <span className="block truncate">{selected.name}</span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-1">
-                  <ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
+                  <span
+                    className="material-symbols-outlined"
+                    aria-hidden="true"
+                  >
+                    unfold_more
+                  </span>
                 </span>
               </Listbox.Button>
               <Listbox.Options className="absolute z-10 max-h-60 w-full overflow-auto text-ellipsis rounded-b-lg border-x-2 border-b-2 border-purple-700 bg-white text-base shadow-lg transition">
