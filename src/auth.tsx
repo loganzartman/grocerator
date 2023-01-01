@@ -13,7 +13,9 @@ export const accessTokenChanged = new CustomEvent('changed');
 
 const redirectUri = () => {
   const url = new URL(location.href);
-  url.search = 'callback';
+  url.pathname = '';
+  url.search = '';
+  url.hash = '';
   return url.toString();
 };
 
@@ -178,7 +180,7 @@ const handleOAuthCallback = async () => {
 
   // check whether an OAuth server has redirected back to us
   let isCallback = false;
-  if (url.searchParams.has('callback')) {
+  if (url.searchParams.has('code')) {
     isCallback = true;
     const nonce = getNonce();
     // there should be a nonce if login was initiated from this page.
