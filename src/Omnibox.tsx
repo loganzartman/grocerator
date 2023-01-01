@@ -11,7 +11,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 type CreateAction = {uid: string; action: 'create'; name: string};
-type DeleteAction = {uid: string; action: 'delete'; name: string; item: Item};
+type DeleteAction = {uid: string; action: 'remove'; name: string; item: Item};
 type Action = CreateAction | DeleteAction;
 export type OmniboxSelection = Item | Action;
 
@@ -20,7 +20,7 @@ const isAction = (selection: OmniboxSelection): selection is Action =>
 
 const actionIcons = {
   create: <PlusCircleIcon className="h-5 w-5" aria-hidden={true} />,
-  delete: <MinusCircleIcon className="h-5 w-5" aria-hidden={true} />,
+  remove: <MinusCircleIcon className="h-5 w-5" aria-hidden={true} />,
 };
 
 const optionClass = ({active}: {active: boolean}) =>
@@ -72,7 +72,7 @@ export const Omnibox = ({
         ...savedItems.filter((item) => !tripItemList.has(item)),
         ...tripItems.map((item) => ({
           uid: `delete ${item.name}`,
-          action: 'delete' as const,
+          action: 'remove' as const,
           name: item.name,
           item,
         })),

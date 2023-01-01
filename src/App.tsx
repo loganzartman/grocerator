@@ -26,7 +26,7 @@ export const App = () => {
         const item = createItem({name: selection.name});
         tripItems.add(item);
         savedItems.add(item);
-      } else if (selection.action === 'delete') {
+      } else if (selection.action === 'remove') {
         tripItems.remove(selection.item);
       } else {
         throw new Error('Unsupported selection');
